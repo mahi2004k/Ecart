@@ -21,18 +21,15 @@ export const isAuthenticated = async (req, res, next) => {
         try {
             decoded = jwt.verify(token, process.env.SECRET_KEY);
         } catch (error) {
-            if (error.name === "TokenExpiredError") {
-                return res.status(401).json({
-                    success: false,
-                    message: "Token has expired",
-                });
-            }
+    console.log("JWT Verify Error:", error);
+    console.log("Error Name:", error.name);
+    console.log("Error Message:", error.message);
 
-            return res.status(401).json({
-                success: false,
-                message: "Invalid token",
-            });
-        }
+    return res.status(401).json({
+        success: false,
+        message: error.message,
+    });
+}
 
         const user = await User.findById(decoded.id);
 
